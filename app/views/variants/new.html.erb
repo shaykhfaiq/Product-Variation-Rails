@@ -1,36 +1,52 @@
-<h2>Create Variant for <%= @product.name %></h2>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Create Variant for <%= @product.name %></h4>
+        </div>
 
-<%= form_with model: [@product, @variant], local: true do |f| %>
-  <p>
-    <%= f.label :sku %><br>
-    <%= f.text_field :sku %>
-  </p>
+        <div class="card-body">
+          <%= form_with model: [@product, @variant], local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :sku, class: "form-label" %>
+              <%= f.text_field :sku, class: "form-control", placeholder: "Enter SKU" %>
+            </div>
 
-  <p>
-    <%= f.label :price %><br>
-    <%= f.text_field :price %>
-  </p>
+            <div class="mb-3">
+              <%= f.label :price, class: "form-label" %>
+              <%= f.text_field :price, class: "form-control", placeholder: "Enter price" %>
+            </div>
 
-  <p>
-    <%= f.label :stock_quantity %><br>
-    <%= f.number_field :stock_quantity %>
-  </p>
+            <div class="mb-3">
+              <%= f.label :stock_quantity, class: "form-label" %>
+              <%= f.number_field :stock_quantity, class: "form-control", placeholder: "Enter stock quantity" %>
+            </div>
 
-  <hr>
+            <hr class="my-4">
 
-  <h3>Select Option Values:</h3>
-  <% @product.option_types.includes(:option_values).each do |option_type| %>
-  <strong><%= option_type.name %></strong><br>
-  <% option_type.option_values.each do |value| %>
-    <label>
-      <%= radio_button_tag "option_value_ids[#{option_type.id}]", value.id %>
-      <%= value.value %>
-    </label><br>
-  <% end %>
-  <br>
-<% end %>
+            <h5 class="text-primary mb-3">Select Option Values</h5>
+            <% @product.option_types.includes(:option_values).each do |option_type| %>
+              <div class="mb-3">
+                <label class="form-label fw-bold"><%= option_type.name %></label>
+                <div class="form-check">
+                  <% option_type.option_values.each do |value| %>
+                    <div class="form-check">
+                      <%= radio_button_tag "option_value_ids[#{option_type.id}]", value.id, false, class: "form-check-input", id: "opt_#{option_type.id}_#{value.id}" %>
+                      <%= label_tag "opt_#{option_type.id}_#{value.id}", value.value, class: "form-check-label" %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
 
-  <%= f.submit "Create Variant" %>
-<% end %>
-
-<%= link_to "Back to Variants", product_variants_path(@product) %>
+            <div class="d-flex justify-content-between mt-4">
+              <%= f.submit "Create Variant", class: "btn btn-success" %>
+              <%= link_to "Back to Variants", product_variants_path(@product), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

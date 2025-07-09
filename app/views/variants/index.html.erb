@@ -1,34 +1,55 @@
-<h2>Variants for <%= @product.name %></h2>
+<div class="container mt-5">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Variants for <%= @product.name %></h4>
+      <%= link_to "New Variant", new_product_variant_path(@product), class: "btn btn-light btn-sm" %>
+    </div>
 
-<%= link_to "New Variant", new_product_variant_path(@product) %>
+    <div class="card-body">
+      <% if @variants.any? %>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Option Values</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @variants.each do |variant| %>
+                <tr>
+                  <td><%= variant.sku %></td>
+                  <td><%= number_to_currency(variant.price) %></td>
+                  <td><%= variant.stock_quantity %></td>
+                  <td>
+                    <% variant.option_values.each do |val| %>
+                      <span class="badge bg-primary mb-1">
+                        <%= val.option_type.name %>: <%= val.value %>
+                      </span><br>
+                    <% end %>
+                  </td>
+                  <td class="text-center">
+                    <%= link_to "Delete",
+                                product_variant_path(@product, variant),
+                                method: :delete,
+                                data: { confirm: "Are you sure?" },
+                                class: "btn btn-sm btn-outline-danger" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted">No variants created yet.</p>
+      <% end %>
+    </div>
 
-<table border="1" cellpadding="6">
-  <thead>
-    <tr>
-      <th>SKU</th>
-      <th>Price</th>
-      <th>Stock</th>
-      <th>Option Values</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @variants.each do |variant| %>
-      <tr>
-        <td><%= variant.sku %></td>
-        <td><%= number_to_currency(variant.price) %></td>
-        <td><%= variant.stock_quantity %></td>
-        <td>
-          <% variant.option_values.each do |val| %>
-            <%= val.option_type.name %>: <%= val.value %><br>
-          <% end %>
-        </td>
-        <td>
-          <%= link_to "Delete", product_variant_path(@product, variant), method: :delete, data: { confirm: "Are you sure?" } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<%= link_to "Back to Product", product_path(@product) %>
+    <div class="card-footer bg-light text-end">
+      <%= link_to "Back to Product", product_path(@product), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+</div>

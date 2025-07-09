@@ -1,74 +1,90 @@
-<h1>Products Listed</h1>
-<%= link_to 'New Product', new_product_path, class: "btn btn-primary" %>
-
-<table class="table table-bordered mt-3">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Price</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @products.each do |product| %>
-      <tr>
-        <td><%= product.name %></td>
-        <td><%= product.description %></td>
-        <td><%= number_to_currency(product.base_price) %></td>
-        <td>
-          <%= link_to 'Show', product_path(product) %> |
-          <%= link_to 'Edit', edit_product_path(product) %> |
-          <%= link_to 'Destroy', product, data: { turbo_method: :delete, confirm: 'Are you sure?' } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<hr>
-
-<h2>Filter Products by Options</h2>
-<%= form_with url: filter_products_path, method: :get, local: true, class: "mb-4" do %>
-  <div class="row mb-2">
-    <div class="col">
-      <label>Option Type:</label>
-      <%= select_tag :option_type_id,
-          options_from_collection_for_select(@option_types, :id, :name, params[:option_type_id]),
-          include_blank: true,
-          class: "form-select" %>
-    </div>
-    <div class="col">
-      <label>Option Value:</label>
-      <%= select_tag :option_value_id,
-          options_from_collection_for_select(@option_values, :id, :value, params[:option_value_id]),
-          include_blank: true,
-          class: "form-select" %>
-    </div>
-    <div class="col mt-4">
-      <%= submit_tag "Filter", class: "btn btn-success mt-2" %>
-    </div>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">Products Listed</h2>
+    <%= link_to 'New Product', new_product_path, class: "btn btn-primary" %>
   </div>
-<% end %>
 
-<% if @filtered_products.present? %>
-  <h3>Filtered Products</h3>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @filtered_products.each do |product| %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle shadow-sm">
+      <thead class="table-primary">
         <tr>
-          <td><%= product.name %></td>
-          <td><%= product.description %></td>
-          <td><%= number_to_currency(product.base_price) %></td>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th class="text-center">Actions</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr>
+            <td><%= product.name %></td>
+            <td><%= truncate(product.description, length: 100) %></td>
+            <td><%= number_to_currency(product.base_price) %></td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to 'Show', product_path(product), class: "btn btn-outline-primary" %>
+                <%= link_to 'Edit', edit_product_path(product), class: "btn btn-outline-secondary" %>
+                <%= link_to 'Destroy', product,
+                            data: { turbo_method: :delete, confirm: 'Are you sure?' },
+                            class: "btn btn-outline-danger" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="my-5">
+
+  <h3 class="text-primary">Filter Products by Options</h3>
+  <%= form_with url: filter_products_path, method: :get, local: true, class: "row g-3 mb-4 align-items-end" do %>
+    <div class="col-md-4">
+      <%= label_tag :option_type_id, "Option Type", class: "form-label" %>
+      <%= select_tag :option_type_id,
+            options_from_collection_for_select(@option_types, :id, :name, params[:option_type_id]),
+            include_blank: true,
+            class: "form-select" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= label_tag :option_value_id, "Option Value", class: "form-label" %>
+      <%= select_tag :option_value_id,
+            options_from_collection_for_select(@option_values, :id, :value, params[:option_value_id]),
+            include_blank: true,
+            class: "form-select" %>
+    </div>
+
+    <div class="col-md-4 d-grid">
+      <%= submit_tag "Filter", class: "btn btn-success" %>
+    </div>
+  <% end %>
+
+  <% if @filtered_products.present? %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-info text-white">
+        <h4 class="mb-0">Filtered Products</h4>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @filtered_products.each do |product| %>
+              <tr>
+                <td><%= product.name %></td>
+                <td><%= truncate(product.description, length: 80) %></td>
+                <td><%= number_to_currency(product.base_price) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>

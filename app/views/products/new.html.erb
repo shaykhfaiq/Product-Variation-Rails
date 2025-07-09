@@ -1,30 +1,49 @@
-<h1>Add New Product</h1>
-<%= form_with(model: @product, local: true) do |form| %>
-  <% if @product.errors.any? %>
-    <div id="error_explanation">
-        <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
-        <ul>
-            <% @product.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-        </ul>       
-    </div>
-    <%end %>
-    <div class="field">
-        <%= form.label :name %>
-        <%= form.text_field :name %>
-    </div>
-    <div class="field">
-        <%= form.label :description %>
-        <%= form.text_area :description %>
-    </div>
-    <div class="field">
-        <%= form.label :base_price %>
-        <%= form.number_field :base_price, step: 0.01 %>
-    </div>
-    <button type="submit">Create Product</button>
-<% end %>
-<p>
-  <%= link_to 'Back to Products', products_path %>
-</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Add New Product</h3>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @product, local: true) do |form| %>
 
+            <% if @product.errors.any? %>
+              <div class="alert alert-danger">
+                <h5><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h5>
+                <ul class="mb-0">
+                  <% @product.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: "Enter product name" %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :description, class: "form-label" %>
+              <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter product description" %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :base_price, class: "form-label" %>
+              <%= form.number_field :base_price, step: 0.01, class: "form-control", placeholder: "Enter base price" %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= form.submit "Create Product", class: "btn btn-primary btn-lg" %>
+            </div>
+
+          <% end %>
+        </div>
+        <div class="card-footer text-end bg-light">
+          <%= link_to 'Back to Products', products_path, class: "btn btn-outline-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
