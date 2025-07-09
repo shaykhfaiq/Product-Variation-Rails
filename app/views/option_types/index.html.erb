@@ -1,0 +1,45 @@
+
+<h1>Option Types</h1>
+
+
+<% if flash[:notice] %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% end %>
+
+
+<h3>Add New Option Type</h3>
+<%= form_with model: @option_type, local: true do |form| %>
+  <p>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </p>
+  <p>
+    <%= form.submit "Create" %>
+  </p>
+<% end %>
+
+<hr>
+
+
+<h3>All Option Types</h3>
+<table border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @option_types.each do |option_type| %>
+      <tr>
+        <td><%= option_type.id %></td>
+        <td><%= option_type.name %></td>
+        <td>
+          <%= link_to "Edit", edit_option_type_path(option_type) %> |
+          <%= link_to "Delete", option_type_path(option_type), method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

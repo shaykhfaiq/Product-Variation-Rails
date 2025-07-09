@@ -11,4 +11,60 @@
     <strong>Price:</strong>
     <%= number_to_currency(@product.base_price) %>
 </p>
+
+
+<h2>Option Types</h2>
+
+
+<%= form_with url: product_product_option_types_path(@product), method: :post, local: true do %>
+  <p>
+    <label for="option_type_id">Select Option Type:</label><br>
+    <%= select_tag :option_type_id,
+          options_from_collection_for_select(OptionType.all - @product.option_types, :id, :name),
+          prompt: "Choose an option type" %>
+  </p>
+  <%= submit_tag "Add Option Type" %>
+<% end %>
+
+
+<h3>Assigned Option Types:</h3>
+<ul>
+  <% @product.option_types.each do |option_type| %>
+    <li>
+      <%= option_type.name %>
+      (<%= link_to "Remove",
+        product_product_option_type_path(@product, ProductOptionType.find_by(product_id: @product.id, option_type_id: option_type.id)),
+        method: :delete,
+        data: { confirm: "Are you sure?" } %>)
+    </li>
+  <% end %>
+</ul>
+
+<hr>
+
+<h2>Variants</h2>
+<% if @variants.any? %>
+  <ul>
+    <% @variants.each do |variant| %>
+      <li>
+       <%=@product.name %> ||
+        SKU: <%= variant.sku %> ||
+        Price: <%= number_to_currency(variant.price) %> ||
+        Stock: <%= variant.stock_quantity %> ||
+        <% variant.option_values.each do |value| %>
+          <%= value.option_type.name %><%= value.value %> ||
+        <% end %>
+      </li>
+      
+
+    <% end %>
+  </ul>
+<% else %>
+  <p>No variants created yet.</p>
+<% end %>
+<h3>Create New Variant</h3>
+<%= link_to "Create Variant", new_product_variant_path(@product), class: "btn btn-primary" %>
+<hr>
+
+
 <%= link_to 'Back to Products', products_path %>

@@ -1,0 +1,36 @@
+<h2>Create Variant for <%= @product.name %></h2>
+
+<%= form_with model: [@product, @variant], local: true do |f| %>
+  <p>
+    <%= f.label :sku %><br>
+    <%= f.text_field :sku %>
+  </p>
+
+  <p>
+    <%= f.label :price %><br>
+    <%= f.text_field :price %>
+  </p>
+
+  <p>
+    <%= f.label :stock_quantity %><br>
+    <%= f.number_field :stock_quantity %>
+  </p>
+
+  <hr>
+
+  <h3>Select Option Values:</h3>
+  <% @product.option_types.includes(:option_values).each do |option_type| %>
+  <strong><%= option_type.name %></strong><br>
+  <% option_type.option_values.each do |value| %>
+    <label>
+      <%= radio_button_tag "option_value_ids[#{option_type.id}]", value.id %>
+      <%= value.value %>
+    </label><br>
+  <% end %>
+  <br>
+<% end %>
+
+  <%= f.submit "Create Variant" %>
+<% end %>
+
+<%= link_to "Back to Variants", product_variants_path(@product) %>

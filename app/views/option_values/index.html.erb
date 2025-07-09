@@ -1,0 +1,39 @@
+<h1>Option Values for "<%= @option_type.name %>"</h1>
+
+<h3>Add New Option Value</h3>
+<%= form_with model: [@option_type, @option_value], local: true do |form| %>
+  <p>
+    <%= form.label :value %><br>
+    <%= form.text_field :value %>
+  </p>
+  <p>
+    <%= form.submit "Add Value" %>
+  </p>
+<% end %>
+
+<hr>
+
+
+<h3>All Option Values</h3>
+<table border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Value</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @option_values.each do |value| %>
+      <tr>
+        <td><%= value.id %></td>
+        <td><%= value.value %></td>
+        <td>
+          <%= link_to "Delete", option_type_option_value_path(@option_type, value), method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to Option Types", option_types_path %></p>

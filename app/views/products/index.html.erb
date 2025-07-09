@@ -1,6 +1,7 @@
 <h1>Products Listed</h1>
-<%= link_to 'New Product', new_product_path %>
-<table>
+<%= link_to 'New Product', new_product_path, class: "btn btn-primary" %>
+
+<table class="table table-bordered mt-3">
   <thead>
     <tr>
       <th>Name</th>
@@ -18,9 +19,56 @@
         <td>
           <%= link_to 'Show', product_path(product) %> |
           <%= link_to 'Edit', edit_product_path(product) %> |
-          <%= link_to 'Destroy', product, data: { turbo_method: :delete } %>
+          <%= link_to 'Destroy', product, data: { turbo_method: :delete, confirm: 'Are you sure?' } %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<hr>
+
+<h2>Filter Products by Options</h2>
+<%= form_with url: filter_products_path, method: :get, local: true, class: "mb-4" do %>
+  <div class="row mb-2">
+    <div class="col">
+      <label>Option Type:</label>
+      <%= select_tag :option_type_id,
+          options_from_collection_for_select(@option_types, :id, :name, params[:option_type_id]),
+          include_blank: true,
+          class: "form-select" %>
+    </div>
+    <div class="col">
+      <label>Option Value:</label>
+      <%= select_tag :option_value_id,
+          options_from_collection_for_select(@option_values, :id, :value, params[:option_value_id]),
+          include_blank: true,
+          class: "form-select" %>
+    </div>
+    <div class="col mt-4">
+      <%= submit_tag "Filter", class: "btn btn-success mt-2" %>
+    </div>
+  </div>
+<% end %>
+
+<% if @filtered_products.present? %>
+  <h3>Filtered Products</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @filtered_products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.description %></td>
+          <td><%= number_to_currency(product.base_price) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

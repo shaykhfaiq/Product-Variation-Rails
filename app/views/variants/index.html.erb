@@ -1,0 +1,34 @@
+<h2>Variants for <%= @product.name %></h2>
+
+<%= link_to "New Variant", new_product_variant_path(@product) %>
+
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>SKU</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Option Values</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @variants.each do |variant| %>
+      <tr>
+        <td><%= variant.sku %></td>
+        <td><%= number_to_currency(variant.price) %></td>
+        <td><%= variant.stock_quantity %></td>
+        <td>
+          <% variant.option_values.each do |val| %>
+            <%= val.option_type.name %>: <%= val.value %><br>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to "Delete", product_variant_path(@product, variant), method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Product", product_path(@product) %>
