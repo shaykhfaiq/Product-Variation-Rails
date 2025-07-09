@@ -1,14 +1,81 @@
-<h1>Product<%= @product.name %></h1>
-<p>
-    <strong>Name:</strong>
-    <%= @product.name %>
-</p>
-<p>
-    <strong>Description:</strong>
-    <%= @product.description %>
-</p>
-<p>
-    <strong>Price:</strong>
-    <%= number_to_currency(@product.base_price) %>
-</p>
-<%= link_to 'Back to Products', products_path %>
+<div class="container mt-5">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">Product: <%= @product.name %></h2>
+    </div>
+    <div class="card-body">
+
+      <div class="mb-3">
+        <p><strong>Name:</strong> <%= @product.name %></p>
+        <p><strong>Description:</strong> <%= @product.description %></p>
+        <p><strong>Price:</strong> <%= number_to_currency(@product.base_price) %></p>
+      </div>
+
+      <hr>
+
+      <h4 class="text-primary">Assign Option Type</h4>
+      <%= form_with url: product_product_option_types_path(@product), method: :post, local: true, class: "row g-3 align-items-end" do %>
+        <div class="col-md-6">
+          <%= label_tag :option_type_id, "Select Option Type", class: "form-label" %>
+          <%= select_tag :option_type_id,
+                options_from_collection_for_select(OptionType.all - @product.option_types, :id, :name),
+                prompt: "Choose an option type",
+                class: "form-select" %>
+        </div>
+        <div class="col-md-auto">
+          <%= submit_tag "Add Option Type", class: "btn btn-success" %>
+        </div>
+      <% end %>
+
+      <div class="mt-4">
+        <h5 class="text-primary">Assigned Option Types:</h5>
+        <% if @product.option_types.any? %>
+          <ul class="list-group">
+            <% @product.option_types.each do |option_type| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= option_type.name %>
+                <%= link_to "Remove",
+                  product_product_option_type_path(@product, ProductOptionType.find_by(product_id: @product.id, option_type_id: option_type.id)),
+                  method: :delete,
+                  data: { confirm: "Are you sure?" },
+                  class: "btn btn-sm btn-outline-danger" %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted">No option types assigned yet.</p>
+        <% end %>
+      </div>
+
+      <hr>
+
+      <div class="mt-4">
+        <h4 class="text-primary">Variants</h4>
+        <% if @variants.any? %>
+          <ul class="list-group mb-3">
+            <% @variants.each do |variant| %>
+              <li class="list-group-item">
+                <strong><%= @product.name %></strong> |
+                SKU: <%= variant.sku %> |
+                Price: <%= number_to_currency(variant.price) %> |
+                Stock: <%= variant.stock_quantity %> |
+                <% variant.option_values.each do |value| %>
+                  <span class="badge bg-primary"><%= value.option_type.name %>: <%= value.value %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted">No variants created yet.</p>
+        <% end %>
+
+        <%= link_to "Create Variant", new_product_variant_path(@product), class: "btn btn-primary" %>
+      </div>
+
+    </div>
+
+    <div class="card-footer text-end bg-light">
+      <%= link_to 'Back to Products', products_path, class: "btn btn-outline-primary" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Option Types</h3>
+    </div>
+
+    <div class="card-body">
+      <% if flash[:notice] %>
+        <div class="alert alert-success">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
+
+      <h5 class="text-primary">Add New Option Type</h5>
+      <%= form_with model: @option_type, local: true do |form| %>
+        <div class="row g-3 align-items-end mb-4">
+          <div class="col-md-6">
+            <%= form.label :name, class: "form-label" %>
+            <%= form.text_field :name, class: "form-control", placeholder: "Enter option type name" %>
+          </div>
+          <div class="col-md-auto">
+            <%= form.submit "Create", class: "btn btn-success" %>
+          </div>
+        </div>
+      <% end %>
+
+      <hr>
+
+      <h5 class="text-primary">All Option Types</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @option_types.each do |option_type| %>
+              <tr>
+                <td><%= option_type.id %></td>
+                <td><%= option_type.name %></td>
+                <td class="text-center">
+                  <div class="btn-group btn-group-sm" role="group">
+                    <%= link_to "Edit", edit_option_type_path(option_type), class: "btn btn-outline-secondary" %>
+                    <%= link_to "Delete", option_type_path(option_type),
+                                method: :delete,
+                                data: { confirm: "Are you sure?" },
+                                class: "btn btn-outline-danger" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
